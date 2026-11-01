@@ -17,7 +17,7 @@ The app runs locally and does not upload your clipboard history to a server. The
 
 **No Node.js, Git, terminal commands, or separate installation are required.** Keep the EXE together with the other extracted files; do not run it from inside the ZIP.
 
-This is a preview build for Windows x64. The package is unsigned and has not yet been tested on a real Windows machine. It runs from the extracted folder and does not include a setup wizard. The current app interface is in Turkish.
+This is a preview build for Windows x64. The package is unsigned. Automated native Windows clipboard and UI tests pass; manual testing with Explorer and installed document thumbnail providers is still needed. It runs from the extracted folder and does not include a setup wizard. The current app interface is in Turkish.
 
 Use the download link above or the ZIP under **Assets** on the release page. GitHub's automatic **Source code** downloads are for development and do not contain a ready-to-run app.
 
@@ -151,6 +151,6 @@ npm run test:smoke
 
 The smoke test uses a temporary application profile and a separate X11 display. It checks native text/image/file clipboard operations, multi-file selections, missing-file handling, private mode, fixed entry ordering, the active circle indicator, file search/previews, editing, and settings. It also writes a panel screenshot with sample content to `test-output/panel.png`. Run it through the provided script to keep test clipboard writes off your regular desktop clipboard.
 
-History/URI parsing tests and the Linux native clipboard/UI smoke test cover these behaviors. The Windows checks workflow runs the same tests against the native Windows clipboard in GitHub Actions. Interactive testing with Explorer and document thumbnail providers is still needed.
+History/URI parsing tests and the Linux native clipboard/UI smoke test cover these behaviors. The [Windows checks workflow](https://github.com/EfeDogan/Windows_Clipboard_Manager/actions/runs/41295748536) passed the same tests against the native Windows clipboard in GitHub Actions. Interactive testing with Explorer and document thumbnail providers is still needed.
 
 The application has no production npm dependencies. The build toolchain may report dependency advisories; inspect them with `npm audit`. Development dependencies are excluded from the packaged application's `app.asar`.

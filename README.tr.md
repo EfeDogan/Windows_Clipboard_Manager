@@ -13,7 +13,7 @@ Windows tray üzerinden açılan metin ve görsel pano geçmişi. Bir kayda tık
 
 **Node.js, Git, terminal komutu veya ayrı bir kurulum gerekmez.** EXE'yi yanındaki dosyalardan ayırma ve doğrudan ZIP'in içinden çalıştırma.
 
-Bu, Windows x64 için bir ön sürümdür. Paket imzasızdır ve henüz gerçek bir Windows makinesinde denenmemiştir. Klasörden çalışır; kurulum sihirbazı içermez. Uygulama arayüzü Türkçedir.
+Bu, Windows x64 için bir ön sürümdür. Paket imzasızdır. Windows üzerinde otomatik pano ve arayüz testleri geçti; Dosya Gezgini ve kurulu belge ön izleme sağlayıcılarıyla elle kullanım kontrolü hâlâ gereklidir. Klasörden çalışır; kurulum sihirbazı içermez. Uygulama arayüzü Türkçedir.
 
 Hazır uygulama için yukarıdaki bağlantıyı veya sürüm sayfasındaki **Assets** bölümünün ZIP dosyasını kullan. GitHub'ın otomatik **Source code** arşivleri çalıştırılabilir uygulama içermez.
 
