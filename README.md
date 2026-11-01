@@ -6,6 +6,21 @@ The app runs locally and does not upload your clipboard history to a server. The
 
 [Türkçe README](README.tr.md)
 
+## Download and run on Windows
+
+**[Download for Windows x64 — v0.1.0 (ZIP)](https://github.com/EfeDogan/Windows_Clipboard_Manager/releases/download/v0.1.0/Clipboard-Manager-0.1.0-windows-x64.zip)** · [Release notes](https://github.com/EfeDogan/Windows_Clipboard_Manager/releases/tag/v0.1.0)
+
+1. Download the ZIP using the link above.
+2. Right-click the downloaded ZIP and choose **Extract All**. Keep the extracted folder in a permanent location.
+3. Open that folder and double-click **Clipboard Manager.exe**.
+4. Click its system tray icon or press **Ctrl+Shift+V** to open your history. If the icon is hidden, check the tray overflow next to the clock.
+
+**No Node.js, Git, terminal commands, or separate installation are required.** Keep the EXE together with the other extracted files; do not run it from inside the ZIP.
+
+This is a preview build for Windows x64. The package is unsigned and has not yet been tested on a real Windows machine. It runs from the extracted folder and does not include a setup wizard. The current app interface is in Turkish.
+
+Use the download link above or the ZIP under **Assets** on the release page. GitHub's automatic **Source code** downloads are for development and do not contain a ready-to-run app.
+
 ## Features
 
 - Text history and image thumbnails, with full content previews.
@@ -16,57 +31,6 @@ The app runs locally and does not upload your clipboard history to a server. The
 - Configurable history limits: 50, 100, 200, or 500 unpinned entries.
 - Optional launch at Windows sign-in.
 - Tray menu with a private-mode toggle and an exit command.
-
-## Installation from source
-
-### Requirements
-
-- Windows x64 for the intended desktop experience.
-- [Node.js](https://nodejs.org/) **22.12.0 or newer**, including npm.
-- [Git](https://git-scm.com/downloads), or download and extract this repository using GitHub's **Code → Download ZIP** option.
-
-Open PowerShell or a terminal and run:
-
-```powershell
-git clone https://github.com/EfeDogan/Windows_Clipboard_Manager.git
-cd Windows_Clipboard_Manager
-npm ci
-npm start
-```
-
-`npm ci` installs the project dependencies and downloads Electron. An internet connection is required for this step. The application starts in the system tray rather than opening a normal taskbar window. Check Windows' hidden tray icons if you do not immediately see it.
-
-If you downloaded the source ZIP instead of cloning it, open a terminal in the extracted project folder and run `npm ci`, followed by `npm start`.
-
-## Build and use the Windows ZIP
-
-To create a distributable Windows x64 package:
-
-```powershell
-npm run dist:win
-```
-
-The output is:
-
-```text
-release/Clipboard-Manager-0.1.0-windows-x64.zip
-```
-
-To use that package on Windows:
-
-1. Extract the **entire ZIP** into a permanent folder.
-2. Run **Clipboard Manager.exe** from that folder.
-3. Open the panel by clicking its tray icon or pressing **Ctrl+Shift+V**.
-
-Keep the EXE together with its supporting files. The packaged application does not require Node.js or npm on the destination computer. This version is distributed as a ZIP rather than an installation wizard, and its executable is not code-signed.
-
-For an unpacked application folder instead of a ZIP:
-
-```powershell
-npm run pack:win
-```
-
-The application folder is written to `release/win-unpacked/`. Windows ZIP packages can also be built on Linux using the same commands.
 
 ## Usage
 
@@ -116,6 +80,57 @@ Use **Ayarlar → Veri klasörünü aç** to open the actual directory.
 - Clipboard changes are checked every 700 ms, so very rapid consecutive copies may be missed.
 - The executable's File Explorer icon currently uses Electron's default icon; the tray and window use the app icon.
 - Windows tray placement, multiple monitors, DPI scaling, launch at sign-in, and compatibility with different Windows applications still need validation on a real Windows machine.
+
+## Development: run from source
+
+### Requirements
+
+- Windows x64 for the intended desktop experience.
+- [Node.js](https://nodejs.org/) **22.12.0 or newer**, including npm.
+- [Git](https://git-scm.com/downloads), or download and extract this repository using GitHub's **Code → Download ZIP** option.
+
+Open PowerShell or a terminal and run:
+
+```powershell
+git clone https://github.com/EfeDogan/Windows_Clipboard_Manager.git
+cd Windows_Clipboard_Manager
+npm ci
+npm start
+```
+
+`npm ci` installs the project dependencies and downloads Electron. An internet connection is required for this step. The application starts in the system tray rather than opening a normal taskbar window. Check Windows' hidden tray icons if you do not immediately see it.
+
+If you downloaded the source ZIP instead of cloning it, open a terminal in the extracted project folder and run `npm ci`, followed by `npm start`.
+
+## Development: build the Windows ZIP
+
+To create a distributable Windows x64 package:
+
+```powershell
+npm run dist:win
+```
+
+The output is:
+
+```text
+release/Clipboard-Manager-0.1.0-windows-x64.zip
+```
+
+To use that package on Windows:
+
+1. Extract the **entire ZIP** into a permanent folder.
+2. Run **Clipboard Manager.exe** from that folder.
+3. Open the panel by clicking its tray icon or pressing **Ctrl+Shift+V**.
+
+Keep the EXE together with its supporting files. The packaged application does not require Node.js or npm on the destination computer. This version is distributed as a ZIP rather than an installation wizard, and its executable is not code-signed.
+
+For an unpacked application folder instead of a ZIP:
+
+```powershell
+npm run pack:win
+```
+
+The application folder is written to `release/win-unpacked/`. Windows ZIP packages can also be built on Linux using the same commands.
 
 ## Development checks
 

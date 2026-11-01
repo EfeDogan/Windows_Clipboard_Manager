@@ -2,16 +2,20 @@
 
 Windows tray üzerinden açılan metin ve görsel pano geçmişi. Bir kayda tıklamak içeriği panoya kopyalar ve paneli kapatır. Yapıştırma kullanıcıya aittir.
 
-## Çalıştırma
+## Windows için indir ve çalıştır
 
-Node.js 22.12 veya üzeri ve npm gerekir. Proje klasöründe:
+**[Windows x64 için indir — v0.1.0 (ZIP)](https://github.com/EfeDogan/Windows_Clipboard_Manager/releases/download/v0.1.0/Clipboard-Manager-0.1.0-windows-x64.zip)** · [Sürüm notları](https://github.com/EfeDogan/Windows_Clipboard_Manager/releases/tag/v0.1.0)
 
-```sh
-npm ci
-npm start
-```
+1. Yukarıdaki bağlantıdan ZIP dosyasını indir.
+2. ZIP'e sağ tıklayıp **Tümünü ayıkla** seçeneğiyle kalıcı bir klasöre çıkar.
+3. Klasördeki **Clipboard Manager.exe** dosyasını çift tıklayarak aç.
+4. Tray simgesine tıkla veya **Ctrl+Shift+V** kullan. Simge görünmüyorsa saatin yanındaki gizli simgeler menüsüne bak.
 
-Uygulama tray simgesiyle başlar. Simgeye tıklayın veya **Ctrl+Shift+V** kullanın. Tray sağ tık menüsünde çıkış bulunur. Kısayol başka bir uygulamadaysa panelde bilgi gösterilir; tray kullanılabilir.
+**Node.js, Git, terminal komutu veya ayrı bir kurulum gerekmez.** EXE'yi yanındaki dosyalardan ayırma ve doğrudan ZIP'in içinden çalıştırma.
+
+Bu, Windows x64 için bir ön sürümdür. Paket imzasızdır ve henüz gerçek bir Windows makinesinde denenmemiştir. Klasörden çalışır; kurulum sihirbazı içermez. Uygulama arayüzü Türkçedir.
+
+Hazır uygulama için yukarıdaki bağlantıyı veya sürüm sayfasındaki **Assets** bölümünün ZIP dosyasını kullan. GitHub'ın otomatik **Source code** arşivleri çalıştırılabilir uygulama içermez.
 
 ## Özellikler
 
@@ -26,7 +30,18 @@ Uygulama tray simgesiyle başlar. Simgeye tıklayın veya **Ctrl+Shift+V** kulla
 
 Veriler `%APPDATA%/clipboard-manager/history.json` dosyasında **şifrelenmeden** tutulur. Ayarlardaki “Veri klasörünü aç” gerçek konumu gösterir. Uygulama bulut veya sunucu kullanmaz. Gizli kip otomatik parola algılama yapmaz. Metinler düz metin olarak saklanır; zengin metin, dosya kopyalama ve kaynak uygulama bilgisi ilk sürüme dahil değildir. Pano 700 ms aralıkla okunur; çok hızlı ardışık kopyalamalar kaçabilir.
 
-## Windows paketi
+## Geliştirme: kaynak koddan çalıştırma
+
+Node.js 22.12 veya üzeri ve npm gerekir. Proje klasöründe:
+
+```sh
+npm ci
+npm start
+```
+
+Uygulama tray simgesiyle başlar. Simgeye tıklayın veya **Ctrl+Shift+V** kullanın. Tray sağ tık menüsünde çıkış bulunur. Kısayol başka bir uygulamadaysa panelde bilgi gösterilir; tray kullanılabilir.
+
+## Geliştirme: Windows paketi oluşturma
 
 Windows makinesinde:
 
