@@ -14,3 +14,7 @@ test('Windows sürücü ve UNC dosya yollarını çözer', () => {
 test('Web adresleri, bozuk URI ve NUL içeren yollar dosya sayılmaz', () => {
   assert.deepEqual(parseFileList('https://example.com/a.pdf\nC:\\rapor.pdf\nfile:///tmp/a%00b\nfile:///tmp/file?query=1\nfile:///tmp/file#hash\nfile:///tmp/%ZZ', false), []);
 });
+test('Windows panosunun farklı URI kodlamaları aynı kayda dönüşür', () => {
+  assert.equal(normalizeFileList('file:///C:/Users/RUNNER%7E1/Resim%20a.png', true), normalizeFileList('file:///C:/Users/RUNNER~1/Resim%20a.png', true));
+  assert.equal(parseFileList('file:///tmp/a%7Eb.png\r\nfile:///tmp/a~b.png', false).length, 1);
+});
