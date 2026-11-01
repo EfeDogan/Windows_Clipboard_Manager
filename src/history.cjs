@@ -1,6 +1,7 @@
 const { createHash, randomUUID } = require('node:crypto');
 const fs = require('node:fs');
 const path = require('node:path');
+const { normalizeFileList } = require('./file-references.cjs');
 
 const MAX_ITEM_BYTES = 10 * 1024 * 1024;
 const MAX_HISTORY_BYTES = 50 * 1024 * 1024;
@@ -19,7 +20,7 @@ class History {
       try {
         const data = JSON.parse(fs.readFileSync(this.file, 'utf8'));
         if (!Array.isArray(data.entries)) throw new Error('Geçersiz geçmiş dosyası');
-        this.entries = data.entries.filter(e => e && typeof e.id === 'string' && ['text', 'image'].includes(e.kind) && typeof e.content === 'string' && size(e) <= MAX_ITEM_BYTES).map(e => ({ ...e, pinned: Boolean(e.pinned), hash: fingerprint(e.kind, e.content) }));
+        this.entries = data.entries.filter(e => e && typeof e.id === 'string' && ['text', 'image', 'files'].includes(e.kind) && typeof e.content === 'string' && size(e) <= MAX_ITEM_BYTES && (e.kind !== 'files' || normalizeFileList(e.content) === e.content && e.content.length > 0)).map(e => ({ ...e, pinned: Boolean(e.pinned), hash: fingerprint(e.kind, e.content) }));
         const s = data.settings || {};
         this.settings = { ...defaults, limit: [50, 100, 200, 500].includes(s.limit) ? s.limit : 100, paused: s.paused === true, launchAtLogin: s.launchAtLogin === true };
         this.trim();
@@ -44,14 +45,15 @@ class History {
     }
   }
   add(kind, content, thumbnail) {
-    if (!['text', 'image'].includes(kind) || !content || Buffer.byteLength(content) > MAX_ITEM_BYTES) return null;
+    if (!['text', 'image', 'files'].includes(kind) || !content || Buffer.byteLength(content) > MAX_ITEM_BYTES) return null;
+    if (kind === 'files') {
+      content = normalizeFileList(content);
+      if (!content) return null;
+    }
     const hash = fingerprint(kind, content);
     const existing = this.entries.find(e => e.hash === hash);
-    if (existing) {
-      this.entries = this.entries.filter(e => e.id !== existing.id);
-      existing.updated = Date.now();
-      this.entries.unshift(existing);
-    } else {
+    if (existing) return existing;
+    else {
       this.entries.unshift({ id: randomUUID(), kind, content, ...(thumbnail ? { thumbnail } : {}), hash, pinned: false, updated: Date.now() });
     }
     this.trim();

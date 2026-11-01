@@ -4,7 +4,7 @@ Windows tray üzerinden açılan metin ve görsel pano geçmişi. Bir kayda tık
 
 ## Windows için indir ve çalıştır
 
-**[Windows x64 için indir — v0.1.0 (ZIP)](https://github.com/EfeDogan/Windows_Clipboard_Manager/releases/download/v0.1.0/Clipboard-Manager-0.1.0-windows-x64.zip)** · [Sürüm notları](https://github.com/EfeDogan/Windows_Clipboard_Manager/releases/tag/v0.1.0)
+**[Windows x64 için indir — v0.1.1 (ZIP)](https://github.com/EfeDogan/Windows_Clipboard_Manager/releases/download/v0.1.1/Clipboard-Manager-0.1.1-windows-x64.zip)** · [Sürüm notları](https://github.com/EfeDogan/Windows_Clipboard_Manager/releases/tag/v0.1.1)
 
 1. Yukarıdaki bağlantıdan ZIP dosyasını indir.
 2. ZIP'e sağ tıklayıp **Tümünü ayıkla** seçeneğiyle kalıcı bir klasöre çıkar.
@@ -19,16 +19,18 @@ Hazır uygulama için yukarıdaki bağlantıyı veya sürüm sayfasındaki **Ass
 
 ## Özellikler
 
-- Metin ve PNG/JPEG/BMP/WebP görsellerin takibi; görselleri PNG olarak saklama.
+- Metin ve ekran görüntüsü geçmişi; dosya yöneticisinden kopyalanan resim, belge, klasör ve çoklu dosya başvurularının takibi.
+- Resim dosyalarında küçük ön izleme ve dosya yolu; belgelerde Windows sağlayabiliyorsa ön izleme, aksi halde dosya yolu.
+- Dosya kaydına tıklayınca dosya başvurusu tekrar panoya alınır; Dosya Gezgini gibi uygulamalara dosya olarak yapıştırılabilir.
 - Arama, ok tuşları ve Enter ile seçim; Escape veya panel dışına tıklamayla kapanma.
 - Her satırda düzenleme/görsel açma, sabitleme, kopyalama, tam içerik ve silme.
-- Tekrarlanan içerik yeni kayıt oluşturmaz; son kullanılan kayıt yukarı taşınır. Sabitlenmiş kayıtlar en üstte görünür.
+- Yeni kayıtlar en üste eklenir. Seçme, tekrar kopyalama, düzenleme veya sabitleme mevcut kayıtların yerini değiştirmez. Seçili kaydı yanındaki daire gösterir; tekrarlanan içerik çoğalmaz.
 - Gizli kip yeni kayıtları durdurur. Kip kapatılınca o sırada panodaki gizli içerik kaydedilmez. Mevcut geçmiş silinmez.
 - 50/100/200/500 kayıt sınırı; sabitler bu sayıdan hariçtir. En fazla 100 sabitlenmiş kayıt, toplam 50 MB ve tek kayıt 10 MB sınırı.
 - Geçmişi temizleme işleminde sabitler varsayılan olarak korunur.
 - Ayarlardan Windows başlangıcında açılma seçeneği.
 
-Veriler `%APPDATA%/clipboard-manager/history.json` dosyasında **şifrelenmeden** tutulur. Ayarlardaki “Veri klasörünü aç” gerçek konumu gösterir. Uygulama bulut veya sunucu kullanmaz. Gizli kip otomatik parola algılama yapmaz. Metinler düz metin olarak saklanır; zengin metin, dosya kopyalama ve kaynak uygulama bilgisi ilk sürüme dahil değildir. Pano 700 ms aralıkla okunur; çok hızlı ardışık kopyalamalar kaçabilir.
+Veriler `%APPDATA%/clipboard-manager/history.json` dosyasında **şifrelenmeden** tutulur. Ayarlardaki “Veri klasörünü aç” gerçek konumu gösterir. Uygulama bulut veya sunucu kullanmaz. Gizli kip otomatik parola algılama yapmaz. Metinler düz metin olarak saklanır; zengin metin ve kaynak uygulama bilgisi tutulmaz. Dosyaların kendileri yedeklenmez; yalnızca yolları ve bulunabilen ön izlemeleri kaydedilir. Dosya silinir veya taşınırsa yeniden kopyalama hata verir ve mevcut panoyu değiştirmez. Diske kaydedilmemiş sanal dosyalar desteklenmez. Pano 700 ms aralıkla okunur; çok hızlı ardışık kopyalamalar kaçabilir.
 
 ## Geliştirme: kaynak koddan çalıştırma
 
@@ -50,7 +52,7 @@ npm ci
 npm run dist:win
 ```
 
-`release/Clipboard-Manager-0.1.0-windows-x64.zip` üretilir. Windows'ta ZIP'in **tamamını bir klasöre çıkarın**, ardından `Clipboard Manager.exe` dosyasını açın. EXE'yi yanındaki dosyalardan ayırmayın. Başlangıçta çalıştıracaksanız klasörü kalıcı bir konuma yerleştirin. Paket henüz imzalı değildir; yürütülebilir dosyanın Explorer simgesi Electron'un varsayılan simgesidir, tray/pencere simgeleri uygulamaya özeldir.
+`release/Clipboard-Manager-0.1.1-windows-x64.zip` üretilir. Windows'ta ZIP'in **tamamını bir klasöre çıkarın**, ardından `Clipboard Manager.exe` dosyasını açın. EXE'yi yanındaki dosyalardan ayırmayın. Başlangıçta çalıştıracaksanız klasörü kalıcı bir konuma yerleştirin. Paket henüz imzalı değildir; yürütülebilir dosyanın Explorer simgesi Electron'un varsayılan simgesidir, tray/pencere simgeleri uygulamaya özeldir.
 
 Linux üzerinde Windows uygulama klasörünü üretmek için `npm run pack:win`, ZIP için `npm run dist:win` kullanılabilir. NSIS kurulumu ilk sürüme dahil değildir: bu ortamda kurulum derleyicisi `Invalid command: !addincludedir` hatası verdi. Windows'ta tray konumu, çoklu ekran/DPI, açılışta başlama ve farklı uygulamalardan kopyalama ayrıca denenmelidir.
 
@@ -68,4 +70,4 @@ Linux'ta Xvfb mevcutsa:
 npm run test:smoke
 ```
 
-Smoke testi geçici bir veri profili ve ayrı X ekranı kullanır; gerçek pano/metin/görsel yazıp okumayı, gizli kipi, düzenlemeyi ve arayüzü denetler. Ön izleme `test-output/panel.png` dosyasına yazılır. Bu test normal masaüstü panosunda doğrudan çalıştırılmamalıdır; `xvfb-run` ayrı ekran sağlar.
+Smoke testi geçici bir veri profili ve ayrı X ekranı kullanır; gerçek metin/görsel/dosya panosunu, çoklu dosyaları, silinen dosyaları, gizli kipi, sabit sıralamayı, seçim dairesini, düzenlemeyi ve arayüzü denetler. Windows checks iş akışı aynı kontrolleri GitHub Actions Windows ortamında çalıştırır. Ön izleme `test-output/panel.png` dosyasına yazılır. Bu test normal masaüstü panosunda doğrudan çalıştırılmamalıdır; `xvfb-run` ayrı ekran sağlar.

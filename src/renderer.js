@@ -28,7 +28,7 @@ function tool(icon, label, callback, extra = '') {
 function render() {
   if (!model) return;
   const query = search.value.toLocaleLowerCase('tr').trim();
-  visible = model.entries.filter(e => !query || (e.text || 'görsel resim ekran görüntüsü').toLocaleLowerCase('tr').includes(query)).sort((a, b) => Number(b.pinned) - Number(a.pinned));
+  visible = model.entries.filter(e => !query || (e.text || e.paths?.join('\n') || 'görsel resim ekran görüntüsü').toLocaleLowerCase('tr').includes(query));
   selected = Math.max(0, Math.min(selected, visible.length - 1));
   const list = $('#history');
   const scrollTop = list.scrollTop;
@@ -38,16 +38,21 @@ function render() {
     row.className = `entry${entry.id === model.activeId ? ' active' : ''}`;
     row.dataset.id = entry.id;
     const copy = document.createElement('button'); copy.className = 'entry-copy';
-    copy.title = entry.kind === 'text' ? `${entry.text.slice(0, 800)}\nPanoya kopyala` : 'Görseli panoya kopyala';
+    copy.title = entry.kind === 'text' ? `${entry.text.slice(0, 800)}\nPanoya kopyala` : entry.kind === 'files' ? `${entry.paths.join('\n')}\nDosyaları panoya kopyala` : 'Görseli panoya kopyala';
     const marker = document.createElement('span'); marker.className = 'marker'; marker.setAttribute('aria-hidden', 'true'); copy.append(marker);
-    if (entry.kind === 'image') {
+    if (entry.thumbnail) {
       const image = document.createElement('img'); image.className = 'thumbnail'; image.src = entry.thumbnail; image.alt = 'Kopyalanan görsel'; copy.append(image);
-    } else { const label = document.createElement('span'); label.className = 'entry-label'; label.textContent = entry.text.replace(/\s+/g, ' '); copy.append(label); }
+    }
+    if (entry.kind !== 'image') {
+      const label = document.createElement('span'); label.className = 'entry-label';
+      label.textContent = entry.kind === 'files' ? `${entry.paths[0]}${entry.paths.length > 1 ? ` (+${entry.paths.length - 1})` : ''}` : entry.text.replace(/\s+/g, ' ');
+      copy.append(label);
+    }
     copy.onclick = () => act('copy', { id: entry.id });
     copy.onfocus = () => { selected = index; };
     row.append(copy);
     const tools = document.createElement('div'); tools.className = 'entry-tools';
-    tools.append(tool(entry.kind === 'text' ? 'edit' : 'image', entry.kind === 'text' ? 'Metni düzenle' : 'Görseli aç', () => entry.kind === 'text' ? edit(entry) : preview(entry)));
+    tools.append(tool(entry.kind === 'text' ? 'edit' : entry.kind === 'files' ? 'file' : 'image', entry.kind === 'text' ? 'Metni düzenle' : 'Ön izlemeyi aç', () => entry.kind === 'text' ? edit(entry) : preview(entry)));
     const pin = tool('pin', entry.pinned ? 'Sabitlemeyi kaldır' : 'Sabitle', () => act('pin', { id: entry.id }), 'pin'); pin.setAttribute('aria-pressed', String(entry.pinned));
     tools.append(pin, tool('copy', 'Panoya kopyala', () => act('copy', { id: entry.id })), tool('book', 'İçeriği görüntüle', () => preview(entry)), tool('trash', 'Kaydı sil', () => act('remove', { id: entry.id }), 'danger'));
     row.append(tools); list.append(row);
@@ -56,7 +61,7 @@ function render() {
   list.hidden = visible.length === 0;
   $('#empty').hidden = visible.length > 0;
   $('#empty strong').textContent = query ? 'Sonuç bulunamadı.' : model.settings.paused ? 'Gizli kip açık.' : 'Panonuz burada.';
-  $('#empty p').textContent = query ? 'Başka bir sözcükle aramayı deneyin.' : model.settings.paused ? 'Yeni kopyalananlar geçmişe kaydedilmiyor.' : 'Kopyaladığınız metinler ve görseller bu listede görünecek.';
+  $('#empty p').textContent = query ? 'Başka bir sözcükle aramayı deneyin.' : model.settings.paused ? 'Yeni kopyalananlar geçmişe kaydedilmiyor.' : 'Kopyaladığınız metinler, görseller ve dosyalar bu listede görünecek.';
   $('#pause').setAttribute('aria-checked', String(model.settings.paused));
   $('#notice').hidden = !model.status; $('#notice').textContent = model.status;
 }
@@ -79,9 +84,15 @@ function edit(entry) {
 }
 async function preview(entry) {
   const result = await act('preview', { id: entry.id }); if (!result) return;
-  const body = dialog(entry.kind === 'image' ? 'Görsel ön izlemesi' : 'Kayıt içeriği');
+  const body = dialog(entry.kind === 'image' ? 'Görsel ön izlemesi' : entry.kind === 'files' ? 'Dosya ön izlemesi' : 'Kayıt içeriği');
   if (entry.kind === 'image') { const image = document.createElement('img'); image.src = `data:image/png;base64,${result.entry.content}`; image.className = 'preview-image'; image.alt = 'Kaydın tam görseli'; body.append(image); }
-  else { const text = document.createElement('pre'); text.className = 'preview-text'; text.textContent = result.entry.content; body.append(text); }
+  else if (entry.kind === 'files') {
+    if (result.entry.thumbnail) {
+      const image = document.createElement('img'); image.src = result.entry.thumbnail; image.className = 'preview-image'; image.alt = 'İlk dosyanın ön izlemesi'; body.append(image);
+    }
+    const paths = document.createElement('pre'); paths.className = 'preview-text'; paths.textContent = result.entry.paths.join('\n'); body.append(paths);
+    paragraph(body, 'Dosyaların kendisi arşivlenmez. Tekrar kopyalayabilmek için özgün dosyalar bu konumlarda bulunmalıdır.', 'muted');
+  } else { const text = document.createElement('pre'); text.className = 'preview-text'; text.textContent = result.entry.content; body.append(text); }
   dialogButton('Kapat', () => modal.close());
   dialogButton('Kopyala', async () => { if (await act('copy', { id: entry.id })) modal.close(); }, 'primary');
 }

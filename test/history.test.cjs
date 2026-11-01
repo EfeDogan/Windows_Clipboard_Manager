@@ -12,9 +12,32 @@ function history(t) {
 test('Tekrar kopyalanan kayıt çoğalmaz ve yeniden yüklenebilir', t => {
   const h = history(t); const first = h.add('text', 'merhaba');
   h.add('text', 'ikinci'); h.add('text', 'merhaba');
-  assert.equal(h.entries.length, 2); assert.equal(h.entries[0].id, first.id);
+  assert.equal(h.entries.length, 2); assert.equal(h.entries[1].id, first.id);
   const loaded = new History(path.dirname(h.file));
   assert.deepEqual(loaded.entries, h.entries);
+});
+test('Tekrar kopyalama, düzenleme ve sabitleme kayıt sırasını değiştirmez', t => {
+  const h = history(t);
+  const first = h.add('text', 'ilk');
+  h.add('text', 'ikinci'); h.add('text', 'üçüncü');
+  const ids = h.entries.map(e => e.id);
+  const timestamp = first.updated;
+  h.add('text', 'ilk');
+  assert.deepEqual(h.entries.map(e => e.id), ids);
+  assert.equal(first.updated, timestamp);
+  h.pin(first.id); h.edit(first.id, 'düzenlenmiş ilk');
+  assert.deepEqual(h.entries.map(e => e.id), ids);
+  assert.deepEqual(new History(path.dirname(h.file)).entries.map(e => e.id), ids);
+});
+test('Dosya başvuruları ve ön izlemeler yeniden yüklenebilir', t => {
+  const h = history(t);
+  const uri = require('node:url').pathToFileURL(path.join(os.tmpdir(), 'Rapor ğ #1.pdf')).href;
+  const entry = h.add('files', uri, 'data:image/png;base64,aGVsbG8=');
+  assert.equal(entry.kind, 'files');
+  const loaded = new History(path.dirname(h.file));
+  assert.equal(loaded.get(entry.id).content, uri);
+  assert.equal(loaded.get(entry.id).thumbnail, entry.thumbnail);
+  assert.equal(h.add('files', 'https://example.com/file.pdf'), null);
 });
 test('Sayı sınırı ve temizleme sabitlenmiş kayıtları korur', t => {
   const h = history(t); h.settings.limit = 2;

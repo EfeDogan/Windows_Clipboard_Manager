@@ -1,0 +1,32 @@
+name: Windows checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - name: Exercise the native Windows clipboard and panel
+        run: npx electron . --smoke-test
+      - name: Save panel preview
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-panel-preview
+          path: test-output/panel.png
+          if-no-files-found: ignore

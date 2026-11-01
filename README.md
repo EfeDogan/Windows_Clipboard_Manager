@@ -8,7 +8,7 @@ The app runs locally and does not upload your clipboard history to a server. The
 
 ## Download and run on Windows
 
-**[Download for Windows x64 — v0.1.0 (ZIP)](https://github.com/EfeDogan/Windows_Clipboard_Manager/releases/download/v0.1.0/Clipboard-Manager-0.1.0-windows-x64.zip)** · [Release notes](https://github.com/EfeDogan/Windows_Clipboard_Manager/releases/tag/v0.1.0)
+**[Download for Windows x64 — v0.1.1 (ZIP)](https://github.com/EfeDogan/Windows_Clipboard_Manager/releases/download/v0.1.1/Clipboard-Manager-0.1.1-windows-x64.zip)** · [Release notes](https://github.com/EfeDogan/Windows_Clipboard_Manager/releases/tag/v0.1.1)
 
 1. Download the ZIP using the link above.
 2. Right-click the downloaded ZIP and choose **Extract All**. Keep the extracted folder in a permanent location.
@@ -23,10 +23,10 @@ Use the download link above or the ZIP under **Assets** on the release page. Git
 
 ## Features
 
-- Text history and image thumbnails, with full content previews.
+- Text history, screenshot thumbnails, and copied file/document references with previews where available.
 - Search and keyboard navigation.
 - Always-visible buttons for editing text, pinning, copying, previewing, and deleting entries.
-- Pinned entries stay at the top and survive ordinary history cleanup.
+- Entries keep their original positions when selected, copied again, edited, or pinned. Pinned entries survive ordinary history cleanup.
 - Private mode pauses history capture without deleting existing entries.
 - Configurable history limits: 50, 100, 200, or 500 unpinned entries.
 - Optional launch at Windows sign-in.
@@ -51,7 +51,7 @@ Use the download link above or the ZIP under **Assets** on the release page. Git
 | Clear history | Click **Geçmişi temizle** and confirm |
 | Quit | Right-click the tray icon and choose **Çıkış** |
 
-Copying an entry closes the panel. The application does **not** automatically paste into another window. Duplicate clipboard content reuses the existing entry and moves it up the list.
+Copying an entry closes the panel. The application does **not** automatically paste into another window. Duplicate clipboard content reuses the existing entry without moving it. Selecting an entry only changes its circle indicator. New entries appear at the top; existing entries retain their relative order, including pinned entries.
 
 Clearing history preserves pinned entries unless you explicitly choose to include them. It does not clear the current system clipboard. If the global shortcut is unavailable, use the tray icon.
 
@@ -75,8 +75,11 @@ Use **Ayarlar → Veri klasörünü aç** to open the actual directory.
 
 ## Supported content and limitations
 
-- Plain text and PNG, JPEG, BMP, and WebP clipboard images are supported. Images are stored and copied back as PNG.
-- Rich text formatting, copied files, and source application information are not retained.
+- Plain text and clipboard images are supported. Clipboard images, such as screenshots, are stored and copied back as PNG.
+- Files copied in Explorer are stored as file references, including image files, documents, folders, and multi-file selections. Selecting a file entry restores a native file copy to the clipboard, so it can be pasted into Explorer. It does not merely copy the path as text.
+- Image files show a thumbnail and their path. Windows document thumbnails depend on the available thumbnail provider; when unavailable, the path remains visible. Multiple-file entries show the first path and a count; the preview lists all paths.
+- File history stores paths and available thumbnails, not backups of file contents. Files must remain at their original paths to be copied again. Missing files produce an error without replacing the current clipboard.
+- Rich text formatting and source application information are not retained. Virtual files that have not been saved to disk, such as some email attachments, are not supported.
 - Clipboard changes are checked every 700 ms, so very rapid consecutive copies may be missed.
 - The executable's File Explorer icon currently uses Electron's default icon; the tray and window use the app icon.
 - Windows tray placement, multiple monitors, DPI scaling, launch at sign-in, and compatibility with different Windows applications still need validation on a real Windows machine.
@@ -113,7 +116,7 @@ npm run dist:win
 The output is:
 
 ```text
-release/Clipboard-Manager-0.1.0-windows-x64.zip
+release/Clipboard-Manager-0.1.1-windows-x64.zip
 ```
 
 To use that package on Windows:
@@ -146,8 +149,8 @@ On Linux with Xvfb installed, run the integration smoke test:
 npm run test:smoke
 ```
 
-The smoke test uses a temporary application profile and a separate X11 display. It checks native text/image clipboard operations, private mode, editing and copying, search, and settings. It also writes a panel screenshot with sample content to `test-output/panel.png`. Run it through the provided script to keep test clipboard writes off your regular desktop clipboard.
+The smoke test uses a temporary application profile and a separate X11 display. It checks native text/image/file clipboard operations, multi-file selections, missing-file handling, private mode, fixed entry ordering, the active circle indicator, file search/previews, editing, and settings. It also writes a panel screenshot with sample content to `test-output/panel.png`. Run it through the provided script to keep test clipboard writes off your regular desktop clipboard.
 
-The history tests and Linux smoke test passed during initial development. A Windows x64 ZIP was built and its archive integrity was checked; the packaged Windows application has not yet been run on Windows.
+History/URI parsing tests and the Linux native clipboard/UI smoke test cover these behaviors. The Windows checks workflow runs the same tests against the native Windows clipboard in GitHub Actions. Interactive testing with Explorer and document thumbnail providers is still needed.
 
 The application has no production npm dependencies. The build toolchain may report dependency advisories; inspect them with `npm audit`. Development dependencies are excluded from the packaged application's `app.asar`.
